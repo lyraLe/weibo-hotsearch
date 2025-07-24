@@ -1,9 +1,18 @@
 {
   "name": "weibosearch",
-  "displayName": "weiboHotSearch",
-  "description": "fishing",
-  "version": "0.0.1",
+  "displayName": "Weibo Hotsearch Viewer",
+  "description": "View Weibo Hotsearch and Entertainment trending topics directly in VS Code WebView.",
+  "version": "0.0.2",
   "publisher": "LyraLee",
+  "keywords": [
+    "weibo",
+    "hotsearch",
+    "trending",
+    "webview",
+    "热搜",
+    "微博",
+    "工具"
+  ],
   "engines": {
     "vscode": "^1.101.0"
   },
@@ -18,11 +27,28 @@
         "command": "weiboHotSearch.show",
         "title": "📈 显示微博热搜榜"
       }
-    ]
+    ],
+  "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "weiboHotContainer",
+          "title": "热榜",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "weiboHotContainer": [
+        {
+          "id": "weiboHotView",
+          "name": "微博热搜"
+        }
+      ]
+    }
   },
   "repository": {
 		"type": "git",
-		"url": "git+https://github.com/lyraLe/weibo-hotsearch.git"
+		"url": "https://github.com/lyraLe/weibo-hotsearch.git"
 	},
   "scripts": {
     "lint": "eslint .",

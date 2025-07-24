@@ -49,7 +49,24 @@ function activate(context) {
   });
 
   context.subscriptions.push(disposable);
-  
+    const treeDataProvider = new class {
+    getTreeItem() {
+      const item = new vscode.TreeItem('点击查看微博热搜');
+      item.command = {
+        command: 'weiboHotSearch.show',
+        title: '打开微博热搜榜',
+      };
+      item.collapsibleState = vscode.TreeItemCollapsibleState.None;
+      return item;
+    }
+
+    getChildren() {
+      return [new vscode.TreeItem('点击查看微博热搜')];
+    }
+  };
+
+  vscode.window.registerTreeDataProvider('weiboHotView', treeDataProvider);
+
 }
 
 async function fetchWeiboHot(url) {
@@ -92,132 +109,7 @@ async function fetchWeiboHot(url) {
     if (browser) await browser.close();
   }
 }
-// function getWebviewContent(hotList, entList) {
-//   function renderSection(title, list) {
-//     if (!list.length) return `<p>暂无数据</p>`;
-//     const rows = list
-//       .map(
-//         (item, index) => `
-//         <tr>
-//           <td class="rank">${item.rank || index + 1}</td>
-//           <td class="title">
-//             <a href="${item.link}" target="_blank">${item.title}</a>
-//             ${item.hot ? `<span class="hot">${item.hot}</span>` : ''}
-//           </td>
-//         </tr>`
-//       )
-//       .join('\n');
 
-//     return `
-//       <h2>${title}</h2>
-//       <table>
-//         <tbody>${rows}</tbody>
-//       </table>
-//     `;
-//   }
-
-//   return `
-//   <!DOCTYPE html>
-//   <html lang="zh">
-//   <head>
-//     <meta charset="UTF-8" />
-//     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-//     <style>
-//       body {
-//         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu;
-//         padding: 20px;
-//         color: #333;
-//       }
-//       h2 {
-//         font-size: 1.2rem;
-//         border-left: 4px solid #fa7d3c;
-//         padding-left: 10px;
-//         margin-top: 2rem;
-//       }
-//       table {
-//         width: 100%;
-//         border-collapse: collapse;
-//         margin-top: 0.5rem;
-//       }
-//       td {
-//         padding: 8px 10px;
-//         border-bottom: 1px solid #eee;
-//       }
-//       td.rank {
-//         width: 2rem;
-//         color: #fa7d3c;
-//         font-weight: bold;
-//       }
-//       td.title a {
-//         text-decoration: none;
-//         color: #0366d6;
-//       }
-//       td.title .hot {
-//         color: #999;
-//         font-size: 0.85rem;
-//         margin-left: 10px;
-//       }
-//     </style>
-//     <title>微博热搜榜</title>
-//   </head>
-//   <body>
-//     <h1>微博热搜速览</h1>
-//     ${renderSection('🔥 热搜榜', hotList)}
-//     ${renderSection('🎬 文娱榜', entList)}
-//   </body>
-//   </html>
-//   `;
-// }
-// function getWebviewContent(hotList, entList) {
-//   function renderSection(title, list) {
-//     const lines = list.map((item, index) => {
-//       const safeTitle = item.title.replace(/"/g, '\\"');
-//       return ` * ${(item.rank || index + 1).toString().padStart(2, '0')}. ${safeTitle}`;
-//     });
-
-//     return [
-//       `/**`,
-//       ` * ${title}`,
-//       ...lines,
-//       ` */`,
-//       ``
-//     ].join('\n');
-//   }
-
-//   const hotText = renderSection('🔥 微博热搜榜', hotList);
-//   const entText = renderSection('🎬 文娱热搜榜', entList);
-
-//   return `
-//   <!DOCTYPE html>
-//   <html lang="zh">
-//   <head>
-//     <meta charset="UTF-8" />
-//     <style>
-//       body {
-//         background-color: #1e1e1e;
-//         color: #d4d4d4;
-//         font-family: Consolas, Monaco, 'Courier New', monospace;
-//         font-size: 13px;
-//         padding: 20px;
-//         white-space: pre;
-//       }
-//       a {
-//         color: #4FC1FF;
-//         text-decoration: none;
-//       }
-//       a:hover {
-//         text-decoration: underline;
-//       }
-//     </style>
-//     <title>微博热搜榜</title>
-//   </head>
-//   <body>
-// ${hotText}
-// ${entText}
-//   </body>
-//   </html>
-//   `;
-// }
 function getWebviewContent(hotList, entList) {
   function renderContent(id, list) {
     const lines = list.map((item, index) => {
